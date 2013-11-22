@@ -29,32 +29,20 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var current_state = "on";
+
 app.get('/', routes.index);
 app.get('/users', user.list);
-app.get('/:user/:light/toggle', routes.toggle);
+app.get('/:user/:light/toggle', routes.toggle(current_state, gcm));
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-
 var registration_ids = [];
-registration_ids.push('APA91bGTZAtSLOhNTO0yS7qACd_BO4oMo8nStuhqE7FG72QVrI-tLC6Is-zi7qCoSgcC1JpGi_dHzEIk8ptXr38tFUV2GkR2J9AOUb2LZkCbtjdqDGccEn8MKqUmrv2wf5_11c6BfsStkrS8TfVgbuBm8NgcKj6wudcEZOwcMBpFPRiayG95sWU');
+registration_ids.push('APA91bEBvQ6b3giluIRN91Ktm4eo7gaoZugh8pnAff1XSnlmMY6mo68ry5DT6C2wgSLpbrpEnCSx9ShjjTVLFCNfQT9b5bnth-tLC6Is-zi7qCoSgcC1JpGi_dHzEIk8ptXr38tFUV2GkR2J9AOUb2LZkCbtjdqDGccEn8MKqUmrv2wf5_11c6BfsStkrS8TfVgbuBm8NgcKj6wudcEZOwcMBpFPRiayG95sWU');
 
-var message = new gcm.Message({
-		collapseKey: "demo",
-    delayWhileIdle: true,
-    data: {
-        key1: 'message1',
-        key2: 'message2'
-    }
-});
-
-var sender = new gcm.Sender('AIzaSyBS1lt8tplnRFl8Z3YZtsQivXzdPNDYtW8');
-sender.send(message, registration_ids, 4, function (err, result) {
-    console.log(result);
-});
 
 
 
