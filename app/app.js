@@ -4,13 +4,17 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
+var mongoose = require('mongoose');
 var gcm = require('node-gcm');
 var path = require('path');
-var app = express();
 
+mongoose.connect('mongodb://localhost/test');
+require('./models/account')(mongoose);
+require('./models/gateway')(mongoose);
+var routes = require('./routes');
+var app = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -32,6 +36,8 @@ if ('development' == app.get('env')) {
 var current_state = "on";
 
 app.get('/', routes.index);
+app.get('/login/:username/:password', routes.login);
+app.get('/register/:username/:password', routes.register);
 app.get('/users', user.list);
 app.get('/:user/:light/toggle', routes.toggle(current_state, gcm));
 

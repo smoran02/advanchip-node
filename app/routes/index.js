@@ -1,4 +1,5 @@
-
+var mongoose = require('mongoose');
+var account = mongoose.model('Account');
 
 exports.index = function(req, res){
   res.render('index', { title: 'Advanchip' });
@@ -8,12 +9,7 @@ exports.toggle = function(current_state, gcm){
 	return function(req, res){
 		var user_id = req.params.user;
 		var light_id = req.params.light;
-		if (current_state === "off"){
-			current_state = "on";
-		}
-		else {
-			current_state = "off";
-		}
+		current_state = !current_state;
 		var message = new gcm.Message();
 		message.addData('message', current_state);
 		//message.addData('light', light_id)
@@ -28,4 +24,23 @@ exports.toggle = function(current_state, gcm){
 
 		res.render('index', { title: 'Toggle a light', user: user_id, light: light_id, state: current_state } );
 	}
+}
+
+exports.register = function(req, res) {
+	account.count({username: req.params.username}, function(err, c){
+		if (c == 0) {
+			var acc = new account({ username: req.params.username, password: req.params.password });
+			acc.save(function(err, docs) {
+				console.log(docs);
+			});
+		}
+	});
+}
+
+exports.login = function(req, res) {
+	var acct = req.params.username;
+	var pword = req.params.password;
+	account.find({ username: acct, password: pword }, function(err, docs) {
+		console.log(docs);
+	});
 }
