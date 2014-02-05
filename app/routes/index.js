@@ -44,3 +44,9 @@ exports.login = function(req, res) {
 		console.log(docs);
 	});
 }
+
+exports.gateway = function(req, res) {
+	var gateway_id = req.params.gateway_id;
+	var gateway_host = req.params.gateway_host;
+	
+}
