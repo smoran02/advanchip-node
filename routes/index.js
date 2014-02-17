@@ -32,8 +32,10 @@ exports.register = function(req, res) {
 			var acc = new account({ username: req.params.username, password: req.params.password });
 			acc.save(function(err, docs) {
 				console.log(docs);
+				res.end("success");
 			});
 		}
+		res.end("failure");
 	});
 }
 
