@@ -51,7 +51,7 @@ var current_state = "on";
 app.get('/', routes.index);
 app.get('/login/:username/:password', routes.login);
 app.get('/register/:username/:password', routes.register);
-app.get('/users', user.list);
+app.get('/users', routes.users);
 app.get('/:user/:light/toggle', routes.toggle(current_state, gcm));
 app.get('/gateway/:gateway_id/:gateway_host', routes.gateway);
 

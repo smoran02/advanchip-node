@@ -50,3 +50,14 @@ exports.gateway = function(req, res) {
 	var gateway_host = req.params.gateway_host;
 	
 }
+
+exports.users = function(req, res) {
+	var userList = [];
+	account.find({}, function(err, users){
+		users.forEach(function(user){
+			userList.push(user.username);
+		});
+		// res.render('users', { title: 'Users', userList: userList } );
+		res.send(users);
+	});
+}
