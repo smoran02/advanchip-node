@@ -32,19 +32,27 @@ exports.register = function(req, res) {
 			var acc = new account({ username: req.params.username, password: req.params.password });
 			acc.save(function(err, docs) {
 				console.log(docs);
-				res.end("success");
 			});
+			res.end("success");
 		}
-		res.end("failure");
+		else {
+			res.end("failure");
+		}
 	});
 }
 
 exports.login = function(req, res) {
 	var acct = req.params.username;
 	var pword = req.params.password;
-	account.find({ username: acct, password: pword }, function(err, docs) {
-		console.log(docs);
+	account.count({ username: acct, password: pword }, function(err, c) {
+		if (c == 1) {
+			res.end("User found");
+		}
+		else {
+			res.end("User not found");
+		}
 	});
+
 }
 
 exports.gateway = function(req, res) {
