@@ -52,8 +52,17 @@ app.get('/', routes.index);
 app.get('/login/:username/:password', routes.login);
 app.get('/register/:username/:password', routes.register);
 app.get('/users', routes.users);
+app.get('/users/erase', routes.eraseUsers);
+app.eg('gateways/erase', routes.eraseGateways);
+
+app.get('/gateways', routes.gateways);
+app.get('/gateway/add/:id', routes.addGateway);
+
+
+app.get('/light/add/:gateway_id/:light_id', routes.addLight);
+
+
 app.get('/:user/:light/toggle', routes.toggle(current_state, gcm));
-app.get('/gateway/:gateway_id/:gateway_host', routes.gateway);
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

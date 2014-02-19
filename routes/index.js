@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var account = mongoose.model('Account');
+var gateway = mongoose.model('Gateway');
 
 exports.index = function(req, res){
   res.render('index', { title: 'Advanchip' });
@@ -55,12 +56,6 @@ exports.login = function(req, res) {
 
 }
 
-exports.gateway = function(req, res) {
-	var gateway_id = req.params.gateway_id;
-	var gateway_host = req.params.gateway_host;
-	
-}
-
 exports.users = function(req, res) {
 	var userList = [];
 	account.find({}, function(err, users){
@@ -68,6 +63,58 @@ exports.users = function(req, res) {
 			userList.push(user.username);
 		});
 		// res.render('users', { title: 'Users', userList: userList } );
-		res.send(users);
+		res.send(userList);
 	});
 }
+
+exports.eraseUsers = function(req, res){
+	account.remove({}, function(err){
+		console.log('user data cleared');
+		res.end('user data cleared');
+	});
+}
+
+exports.eraseGateways = function(req, res){
+	gateway.remove({}, function(err){
+		console.log('gateway data cleared');
+		res.end('gateway data cleared');
+	});
+}
+
+exports.gateways = function(req, res) {
+	var gatewayList = [];
+	gateway.find({}, function(err, gateways){
+		gateways.forEach(function(gateway){
+			gatewayList.push(gateway.gatewayID);
+		});
+		res.send(gateways);
+	});
+}
+
+exports.addGateway = function(req, res){
+	var gate = new gateway({ gatewayID: req.params.id });
+	gate.save(function(err, docs){
+		console.log(docs);
+		res.send('done');
+	});
+}
+
+exports.addLight = function(req, res){
+	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
+		gate.lights.light_id = req.params.light_id;
+		gate.lights.state = false;
+	});
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
