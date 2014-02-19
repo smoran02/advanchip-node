@@ -53,7 +53,7 @@ app.get('/login/:username/:password', routes.login);
 app.get('/register/:username/:password', routes.register);
 app.get('/users', routes.users);
 app.get('/users/erase', routes.eraseUsers);
-app.eg('gateways/erase', routes.eraseGateways);
+app.get('gateways/erase', routes.eraseGateways);
 
 app.get('/gateways', routes.gateways);
 app.get('/gateway/add/:id', routes.addGateway);
