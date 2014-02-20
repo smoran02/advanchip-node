@@ -6,6 +6,11 @@ block content
   p Light #: #{light}
   p Light is: #{state}
   h2= routes
-  p /register/:username/:password
-  p /login/:username/:password
+  
+  p /users   																	Lists all users
+  p /gateways 																Lists all gateways
+  p /users/erase 															Erases all user data
+  p /gateways/erase 													Erases all gateway data
+  p /register/:username/:password							Register user
+  p /login/:username/:password								Login user
   p /:user/:light/toggle -- this will change, was for the first demo

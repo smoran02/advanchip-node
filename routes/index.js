@@ -94,15 +94,45 @@ exports.gateways = function(req, res) {
 exports.addGateway = function(req, res){
 	var gate = new gateway({ gatewayID: req.params.id });
 	gate.save(function(err, docs){
-		console.log(docs);
-		res.send('done');
+		if (err){
+			console.log(err);
+			res.send(err.err);
+		}
+		else {
+			console.log(docs);
+			res.end('done');	
+		}
 	});
 }
 
 exports.addLight = function(req, res){
+	var dupe = false;
 	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
-		gate.lights.light_id = req.params.light_id;
-		gate.lights.state = false;
+		if (gate === null){
+			res.send("Couldn't find gateway with id " + req.params.gateway_id);
+		}
+		else {
+			for (var i = 0; i < gate.lights.length; i++) {
+				if (gate.lights[i].light_id === req.params.light_id){
+					dupe = true;
+					break;
+				}
+			}
+			if (dupe){
+				res.end('light ' + req.params.light_id + " already exists on gateway " + req.params.gateway_id);
+			}
+			else {
+				var newLight = {};
+				newLight.light_id = req.params.light_id;
+				newLight.state = false;
+				gate.lights.push(newLight);
+				gate.save(function(err, docs){
+					console.log(err);
+					res.send("light " + req.params.light_id + " added to gateway " + req.params.gateway_id);
+					res.send(gate);
+				});
+			}
+		}
 	});
 }
 
