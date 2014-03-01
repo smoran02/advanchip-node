@@ -56,7 +56,8 @@ app.get('/register', routes.register);
 app.get('/users/erase', routes.eraseUsers);
 
 app.get('/gateways', routes.gateways);
-app.get('/gateway', routes.getGateway);
+app.get('/gateway/:gateway_id', routes.getGateway);
+app.get('/gateway/alloff/:gateway_id', routes.allOff);
 app.post('/gateway/add', routes.addGateway);
 app.post('/gateway/update', routes.updateGateway);
 app.get('/gateways/erase', routes.eraseGateways);
@@ -64,7 +65,7 @@ app.get('/gateways/erase', routes.eraseGateways);
 app.post('/switch/add', routes.addSwitch);
 
 
-app.get('', routes.toggle(current_state, gcm));
+app.get('/toggle', routes.toggle(current_state, gcm));
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

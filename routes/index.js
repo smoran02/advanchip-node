@@ -23,7 +23,7 @@ exports.toggle = function(current_state, gcm){
 		    console.log(message);
 		});
 
-		res.render('index', { title: 'Toggle a switch', user: user_id, switch: switch_id, state: current_state } );
+		res.render('index', { title: 'Toggle a switch', user: user_id, swich: switch_id, state: current_state } );
 	}
 }
 
@@ -91,7 +91,11 @@ exports.eraseGateways = function(req, res){
 	});
 }
 
-
+exports.getGateway = function(req, res){
+	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
+		res.send(gate);
+	});
+}
 
 exports.addGateway = function(req, res){
 	console.log(req.body);
@@ -118,7 +122,26 @@ exports.updateGateway = function(req, res){
 	});
 }
 
+exports.allOff = function(req, res){
+	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
+		gate.floors.forEach(function(floor){
+			floor.rooms.forEach(function(room){
+				room.switches.forEach(function(swich){
+					swich.state = false;
+				});
+			});
+		});
+		gate.save(function(err, docs){
+			console.log(docs);
+		});
+	});
+}
+
 exports.addSwitch = function(req, res){
+	console.log(req.body);
+}
+
+/*exports.addSwitch = function(req, res){
 	var dupe = false;
 	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
 		if (gate === null){
@@ -147,7 +170,7 @@ exports.addSwitch = function(req, res){
 			}
 		}
 	});
-}
+}*/
 
 
 
