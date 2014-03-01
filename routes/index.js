@@ -9,7 +9,7 @@ exports.index = function(req, res){
 exports.toggle = function(current_state, gcm){
 	return function(req, res){
 		var user_id = req.params.user;
-		var light_id = req.params.light;
+		var switch_id = req.params.switch_id;
 		current_state = !current_state;
 		var message = new gcm.Message();
 		message.addData('message', current_state);
@@ -23,7 +23,7 @@ exports.toggle = function(current_state, gcm){
 		    console.log(message);
 		});
 
-		res.render('index', { title: 'Toggle a light', user: user_id, light: light_id, state: current_state } );
+		res.render('index', { title: 'Toggle a switch', user: user_id, switch: switch_id, state: current_state } );
 	}
 }
 
@@ -74,13 +74,6 @@ exports.eraseUsers = function(req, res){
 	});
 }
 
-exports.eraseGateways = function(req, res){
-	gateway.remove({}, function(err){
-		console.log('gateway data cleared');
-		res.end('gateway data cleared');
-	});
-}
-
 exports.gateways = function(req, res) {
 	var gatewayList = [];
 	gateway.find({}, function(err, gateways){
@@ -91,8 +84,18 @@ exports.gateways = function(req, res) {
 	});
 }
 
+exports.eraseGateways = function(req, res){
+	gateway.remove({}, function(err){
+		console.log('gateway data cleared');
+		res.end('gateway data cleared');
+	});
+}
+
+
+
 exports.addGateway = function(req, res){
-	var gate = new gateway({ gatewayID: req.params.id });
+	console.log(req.body);
+	var gate = new gateway(req.body);
 	gate.save(function(err, docs){
 		if (err){
 			console.log(err);
@@ -100,35 +103,45 @@ exports.addGateway = function(req, res){
 		}
 		else {
 			console.log(docs);
-			res.end('done');	
+			res.end('done');
 		}
 	});
 }
 
-exports.addLight = function(req, res){
+exports.updateGateway = function(req, res){
+	var query = { gatewayID: req.body.gatewayID };
+	gateway.findOne(query, function(err, gate){
+		console.log(gate);
+	});
+	gateway.findOneAndUpdate(query, req.body, function(err, gate){
+		console.log(gate);
+	});
+}
+
+exports.addSwitch = function(req, res){
 	var dupe = false;
 	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
 		if (gate === null){
 			res.send("Couldn't find gateway with id " + req.params.gateway_id);
 		}
 		else {
-			for (var i = 0; i < gate.lights.length; i++) {
-				if (gate.lights[i].light_id === req.params.light_id){
+			for (var i = 0; i < gate.switches.length; i++){
+				if (gate.switches[i].switch_id === req.params.switch_id){
 					dupe = true;
 					break;
 				}
 			}
 			if (dupe){
-				res.end('light ' + req.params.light_id + " already exists on gateway " + req.params.gateway_id);
+				res.end('switch ' + req.params.switch_id + " already exists on gateway " + req.params.gateway_id);
 			}
 			else {
-				var newLight = {};
-				newLight.light_id = req.params.light_id;
-				newLight.state = false;
-				gate.lights.push(newLight);
+				var newSwitch = {};
+				newSwitch.switch_id = req.params.switch_id;
+				newSwitch.state = false;
+				gate.switches.push(newSwitch);
 				gate.save(function(err, docs){
 					console.log(err);
-					res.send("light " + req.params.light_id + " added to gateway " + req.params.gateway_id);
+					res.send("Switch " + req.params.switch_id + " added to gateway " + req.params.gateway_id);
 					res.send(gate);
 				});
 			}

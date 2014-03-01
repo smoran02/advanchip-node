@@ -49,20 +49,22 @@ if ('development' == app.get('env')) {
 var current_state = "on";
 
 app.get('/', routes.index);
-app.get('/login/:username/:password', routes.login);
-app.get('/register/:username/:password', routes.register);
+
 app.get('/users', routes.users);
+app.get('/login', routes.login);
+app.get('/register', routes.register);
 app.get('/users/erase', routes.eraseUsers);
-app.get('/gateways/erase', routes.eraseGateways);
 
 app.get('/gateways', routes.gateways);
-app.get('/gateway/add/:id', routes.addGateway);
+app.get('/gateway', routes.getGateway);
+app.post('/gateway/add', routes.addGateway);
+app.post('/gateway/update', routes.updateGateway);
+app.get('/gateways/erase', routes.eraseGateways);
+
+app.post('/switch/add', routes.addSwitch);
 
 
-app.get('/light/add/:gateway_id/:light_id', routes.addLight);
-
-
-app.get('/:user/:light/toggle', routes.toggle(current_state, gcm));
+app.get('', routes.toggle(current_state, gcm));
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

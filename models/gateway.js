@@ -3,12 +3,26 @@ module.exports = function(mongoose) {
 	var gatewaySchema = new Schema(
 		{
 			gatewayID: { type: String, unique: true, lowercase: true, trim: true },
-			admins: { type: [String] },
-			users: { type: [String] },
+			name: { type: String, unique: true, trim: true },
+			users: [{
+				name: { type: String },
+				permissions: { type: String }
+			}],
 			hostname: { type: String },
-			lights: [{ 
-				light_id: { type: String, unique: true, trim: true },
-				state: { type: Boolean }  
+			floors: [{
+				name: { type: String },
+				image: { type: String },
+				description: { type: String },
+				rooms: [{
+					name: { type: String },
+					image: { type: String },
+					description: { type: String },
+					switches: [{
+						name: { type: String },
+						switch_id: { type: String, trim: true },
+						state: { type: Boolean }
+					}]
+				}]
 			}]
 		});
 	mongoose.model('Gateway', gatewaySchema);
