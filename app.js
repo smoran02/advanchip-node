@@ -51,8 +51,8 @@ var current_state = "on";
 app.get('/', routes.index);
 
 app.get('/users', routes.users);
-app.get('/login', routes.login);
-app.get('/register', routes.register);
+app.get('/login/:username/:password', routes.login);
+app.get('/register/:username/:password', routes.register);
 app.get('/users/erase', routes.eraseUsers);
 
 app.get('/gateways', routes.gateways);
