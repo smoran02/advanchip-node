@@ -56,6 +56,7 @@ app.get('/register/:username/:password', routes.register);
 app.get('/users/erase', routes.eraseUsers);
 
 app.get('/gateways', routes.gateways);
+app.get('/gateways/:user', routes.gatewaysByUser);
 app.get('/gateway/:gateway_id', routes.getGateway);
 app.get('/gateway/alloff/:gateway_id', routes.allOff);
 app.post('/gateway/add', routes.addGateway);

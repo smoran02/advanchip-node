@@ -84,6 +84,13 @@ exports.gateways = function(req, res) {
 	});
 }
 
+exports.gatewaysByUser = function(req, res){
+	gateway.find({ 'users.name': req.params.user }, function(err, gates){
+		if (err) console.log(err);
+		res.send(gates);
+	});
+}
+
 exports.eraseGateways = function(req, res){
 	gateway.remove({}, function(err){
 		console.log('gateway data cleared');
