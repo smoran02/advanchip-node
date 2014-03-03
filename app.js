@@ -52,7 +52,7 @@ app.get('/', routes.index);
 
 app.get('/users', routes.users);
 app.get('/login/:username/:password', routes.login);
-app.get('/register/:username/:password', routes.register);
+app.post('/register', routes.register);
 app.get('/users/erase', routes.eraseUsers);
 
 app.get('/gateways', routes.gateways);

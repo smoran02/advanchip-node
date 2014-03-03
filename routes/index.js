@@ -28,9 +28,9 @@ exports.toggle = function(current_state, gcm){
 }
 
 exports.register = function(req, res) {
-	account.count({username: req.params.username}, function(err, c){
+	account.count({username: req.body.username}, function(err, c){
 		if (c == 0) {
-			var acc = new account({ username: req.params.username, password: req.params.password });
+			var acc = new account(req.body);
 			acc.save(function(err, docs) {
 				console.log(docs);
 			});
