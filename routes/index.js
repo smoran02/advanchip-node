@@ -62,7 +62,7 @@ exports.users = function(req, res) {
 		users.forEach(function(user){
 			userList.push(user.username);
 		});
-		res.send(userList);
+		res.send(users);
 	});
 }
 
