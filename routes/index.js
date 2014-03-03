@@ -59,7 +59,10 @@ exports.login = function(req, res) {
 exports.users = function(req, res) {
 	var userList = [];
 	account.find({}, function(err, users){
-		res.send(users);
+		users.forEach(function(user){
+			userList.push(user.username);
+		});
+		res.send(userList);
 	});
 }
 
