@@ -62,9 +62,9 @@ app.get('/gateway/alloff/:gateway_id', routes.allOff);
 app.post('/gateway/add', routes.addGateway);
 app.post('/gateway/update', routes.updateGateway);
 app.get('/gateways/erase', routes.eraseGateways);
-
-app.post('/switch/add', routes.addSwitch);
-
+app.get('/floor/:gateway_id/:floor', routes.addFloor);
+app.get('/room/:gateway_id/:floor/:room', routes.addRoom);
+app.get('/switch/:gateway_id/:floor/:room', routes.addSwitch);
 
 app.get('/toggle', routes.toggle(current_state, gcm));
 

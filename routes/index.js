@@ -53,7 +53,6 @@ exports.login = function(req, res) {
 			res.end("User not found");
 		}
 	});
-
 }
 
 exports.users = function(req, res) {
@@ -141,6 +140,16 @@ exports.allOff = function(req, res){
 			console.log(docs);
 		});
 	});
+}
+
+exports.addFloor = function(req, res){
+	gateway.find({ gatewayID: req.params.gateway_id }, function(err, gate){
+		gate.floors.push(req.params.floor);
+	});
+}
+
+exports.addRoom = function(req, res){
+	
 }
 
 exports.addSwitch = function(req, res){
