@@ -160,7 +160,7 @@ exports.addRoom = function(req, res){
 exports.addSwitch = function(req, res){
 	gateway.update({ gatewayID: req.params.gateway_id }, 
 								 {$push: {"switches": {
-								 												name: req.params.room, 
+								 												name: req.params.name, 
 								 												floor: req.params.floor,
 								 												room: req.params.room,
 								 												state: false,
