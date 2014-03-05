@@ -6,26 +6,26 @@ exports.index = function(req, res){
   res.render('index', { title: 'Advanchip' });
 };
 
-exports.toggle = function(current_state, gcm){
-	return function(req, res){
-		var user_id = req.params.user;
-		var switch_id = req.params.switch_id;
-		current_state = !current_state;
-		var message = new gcm.Message();
-		message.addData('message', current_state);
-		//message.addData('light', light_id)
-		var registration_ids = [];
-		registration_ids.push(user_id);
+// exports.toggle = function(current_state, gcm){
+// 	return function(req, res){
+// 		var user_id = req.params.user;
+// 		var switch_id = req.params.switch_id;
+// 		current_state = !current_state;
+// 		var message = new gcm.Message();
+// 		message.addData('message', current_state);
+// 		//message.addData('light', light_id)
+// 		var registration_ids = [];
+// 		registration_ids.push(user_id);
 
-		var sender = new gcm.Sender('AIzaSyBS1lt8tplnRFl8Z3YZtsQivXzdPNDYtW8');
-		sender.send(message, registration_ids, 4, function (err, result) {
-		    console.log(result);
-		    console.log(message);
-		});
+// 		var sender = new gcm.Sender('AIzaSyBS1lt8tplnRFl8Z3YZtsQivXzdPNDYtW8');
+// 		sender.send(message, registration_ids, 4, function (err, result) {
+// 		    console.log(result);
+// 		    console.log(message);
+// 		});
 
-		res.render('index', { title: 'Toggle a switch', user: user_id, swich: switch_id, state: current_state } );
-	}
-}
+// 		res.render('index', { title: 'Toggle a switch', user: user_id, swich: switch_id, state: current_state } );
+// 	}
+// }
 
 exports.register = function(req, res) {
 	account.count({username: req.body.username}, function(err, c){
@@ -143,17 +143,45 @@ exports.allOff = function(req, res){
 }
 
 exports.addFloor = function(req, res){
-	gateway.find({ gatewayID: req.params.gateway_id }, function(err, gate){
-		gate.floors.push(req.params.floor);
-	});
+	gateway.update({ gatewayID: req.params.gateway_id }, {$push: {"floors": {name: req.params.floor}}},
+								 function(err, numAffected, docs){
+								 	 res.send(docs);
+								 });
 }
 
 exports.addRoom = function(req, res){
-	
+	gateway.update({ gatewayID: req.params.gateway_id }, 
+								 {$push: {"rooms": {name: req.params.room, floor: req.params.floor}}},
+								 function(err, numAffected, docs){
+								   res.send(docs);
+								 });
 }
 
 exports.addSwitch = function(req, res){
-	console.log(req.body);
+	gateway.update({ gatewayID: req.params.gateway_id }, 
+								 {$push: {"switches": {
+								 												name: req.params.room, 
+								 												floor: req.params.floor,
+								 												room: req.params.room,
+								 												state: false,
+								 												switch_id: req.params.switch_id
+								 											}}},
+								 function(err, numAffected, docs){
+								   res.send(docs);
+								 });
+}
+
+exports.toggle = function(req, res){
+	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
+		gate.switches.forEach(function(swich){
+			if (swich.switch_id === req.params.switch_id){
+				swich.state = !swich.state;
+				gate.save(function(err, docs){
+					res.send(docs);
+				});
+			}
+		});
+	});
 }
 
 /*exports.addSwitch = function(req, res){

@@ -64,9 +64,10 @@ app.post('/gateway/update', routes.updateGateway);
 app.get('/gateways/erase', routes.eraseGateways);
 app.get('/floor/:gateway_id/:floor', routes.addFloor);
 app.get('/room/:gateway_id/:floor/:room', routes.addRoom);
-app.get('/switch/:gateway_id/:floor/:room', routes.addSwitch);
+app.get('/switch/:gateway_id/:floor/:room/:switch_id/:name', routes.addSwitch);
 
-app.get('/toggle', routes.toggle(current_state, gcm));
+app.get('/toggle/:gateway_id/:switch_id', routes.toggle);
+
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

@@ -12,18 +12,22 @@ module.exports = function(mongoose) {
 			floors: [{
 				name: { type: String },
 				image: { type: String },
+				description: { type: String }
+			}],
+			rooms: [{
+				name: { type: String },
+				image: { type: String },
 				description: { type: String },
-				rooms: [{
-					name: { type: String },
-					image: { type: String },
-					description: { type: String },
-					switches: [{
-						name: { type: String },
-						switch_id: { type: String, trim: true },
-						state: { type: Boolean }
-					}]
-				}]
+				floor: { type: String }
+			}],
+			switches: [{
+				name: { type: String },
+				switch_id: { type: String, trim: true },
+				state: { type: Boolean },
+				floor: { type: String },
+				room: { type: String }
 			}]
 		});
 	mongoose.model('Gateway', gatewaySchema);
 }
+
