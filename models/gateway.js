@@ -2,7 +2,7 @@ module.exports = function(mongoose) {
 	var Schema = mongoose.Schema;
 	var gatewaySchema = new Schema(
 		{
-			gatewayID: { type: String, unique: true, lowercase: true, trim: true },
+			gatewayID: { type: String, unique: true, trim: true },
 			name: { type: String, unique: true, trim: true },
 			users: [{
 				name: { type: String },

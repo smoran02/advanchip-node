@@ -4,7 +4,6 @@
  */
 
 var express = require('express');
-var user = require('./routes/user');
 var http = require('http');
 var mongoose = require('mongoose');
 var gcm = require('node-gcm');
@@ -27,7 +26,7 @@ mongoose.connect(uristring, function (err, res) {
 require('./models/account')(mongoose);
 require('./models/gateway')(mongoose);
 var routes = require('./routes');
-var app = express();
+var app = module.exports = express();
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -46,9 +45,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-var current_state = "on";
-
-app.get('/', routes.index);
 
 app.get('/users', routes.users);
 app.get('/login/:username/:password', routes.login);
@@ -67,7 +63,6 @@ app.get('/room/:gateway_id/:floor/:room', routes.addRoom);
 app.get('/switch/:gateway_id/:floor/:room/:switch_id/:name', routes.addSwitch);
 
 app.get('/toggle/:gateway_id/:switch_id', routes.toggle);
-
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function(){

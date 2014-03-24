@@ -3,7 +3,7 @@ module.exports = function(mongoose) {
 	var accountSchema = new Schema(
 		{
 			username: { type: String, trim: true },
-			password: { type: String },
+			password: { type: String, trim: true },
 			first_name: { type: String, trim: true },
 			last_name: { type: String, trim: true }
 		});

@@ -2,76 +2,6 @@ var mongoose = require('mongoose');
 var account = mongoose.model('Account');
 var gateway = mongoose.model('Gateway');
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Advanchip' });
-};
-
-// exports.toggle = function(current_state, gcm){
-// 	return function(req, res){
-// 		var user_id = req.params.user;
-// 		var switch_id = req.params.switch_id;
-// 		current_state = !current_state;
-// 		var message = new gcm.Message();
-// 		message.addData('message', current_state);
-// 		//message.addData('light', light_id)
-// 		var registration_ids = [];
-// 		registration_ids.push(user_id);
-
-// 		var sender = new gcm.Sender('AIzaSyBS1lt8tplnRFl8Z3YZtsQivXzdPNDYtW8');
-// 		sender.send(message, registration_ids, 4, function (err, result) {
-// 		    console.log(result);
-// 		    console.log(message);
-// 		});
-
-// 		res.render('index', { title: 'Toggle a switch', user: user_id, swich: switch_id, state: current_state } );
-// 	}
-// }
-
-exports.register = function(req, res) {
-	account.count({username: req.body.username}, function(err, c){
-		if (c == 0) {
-			var acc = new account(req.body);
-			acc.save(function(err, docs) {
-				console.log(docs);
-			});
-			res.end("success");
-		}
-		else {
-			res.end("failure");
-		}
-	});
-}
-
-exports.login = function(req, res) {
-	var acct = req.params.username;
-	var pword = req.params.password;
-	account.count({ username: acct, password: pword }, function(err, c) {
-		if (c == 1) {
-			res.end("User found");
-		}
-		else {
-			res.end("User not found");
-		}
-	});
-}
-
-exports.users = function(req, res) {
-	var userList = [];
-	account.find({}, function(err, users){
-		users.forEach(function(user){
-			userList.push(user.username);
-		});
-		res.send(users);
-	});
-}
-
-exports.eraseUsers = function(req, res){
-	account.remove({}, function(err){
-		console.log('user data cleared');
-		res.end('user data cleared');
-	});
-}
-
 exports.gateways = function(req, res) {
 	var gatewayList = [];
 	gateway.find({}, function(err, gateways){
@@ -129,12 +59,8 @@ exports.updateGateway = function(req, res){
 
 exports.allOff = function(req, res){
 	gateway.findOne({ gatewayID: req.params.gateway_id }, function(err, gate){
-		gate.floors.forEach(function(floor){
-			floor.rooms.forEach(function(room){
-				room.switches.forEach(function(swich){
-					swich.state = false;
-				});
-			});
+		gate.switches.forEach(function(swich){
+			swich.state = false;
 		});
 		gate.save(function(err, docs){
 			console.log(docs);
@@ -183,6 +109,76 @@ exports.toggle = function(req, res){
 		});
 	});
 }
+
+exports.register = function(req, res) {
+	account.count({username: req.body.username}, function(err, c){
+		if (c == 0) {
+			var acc = new account(req.body);
+			acc.save(function(err, docs) {
+				console.log(docs);
+			});
+			res.end("success");
+		}
+		else {
+			res.end("failure");
+		}
+	});
+}
+
+exports.login = function(req, res) {
+	var acct = req.params.username;
+	var pword = req.params.password;
+	account.count({ username: acct, password: pword }, function(err, c) {
+		if (c == 1) {
+			res.end("User found");
+		}
+		else {
+			res.end("User not found");
+		}
+	});
+}
+
+exports.users = function(req, res) {
+	var userList = [];
+	account.find({}, function(err, users){
+		users.forEach(function(user){
+			userList.push(user.username);
+		});
+		res.send(users);
+	});
+}
+
+exports.eraseUsers = function(req, res){
+	account.remove({}, function(err){
+		console.log('user data cleared');
+		res.end('user data cleared');
+	});
+}
+
+// exports.toggle = function(current_state, gcm){
+// 	return function(req, res){
+// 		var user_id = req.params.user;
+// 		var switch_id = req.params.switch_id;
+// 		current_state = !current_state;
+// 		var message = new gcm.Message();
+// 		message.addData('message', current_state);
+// 		//message.addData('light', light_id)
+// 		var registration_ids = [];
+// 		registration_ids.push(user_id);
+
+// 		var sender = new gcm.Sender('AIzaSyBS1lt8tplnRFl8Z3YZtsQivXzdPNDYtW8');
+// 		sender.send(message, registration_ids, 4, function (err, result) {
+// 		    console.log(result);
+// 		    console.log(message);
+// 		});
+
+// 		res.render('index', { title: 'Toggle a switch', user: user_id, swich: switch_id, state: current_state } );
+// 	}
+// }
+
+
+
+
 
 /*exports.addSwitch = function(req, res){
 	var dupe = false;
