@@ -72,6 +72,66 @@ server.listen(app.get('port'), function(){
 var registration_ids = [];
 registration_ids.push('APA91bEBvQ6b3giluIRN91Ktm4eo7gaoZugh8pnAff1XSnlmMY6mo68ry5DT6C2wgSLpbrpEnCSx9ShjjTVLFCNfQT9b5bnth-tLC6Is-zi7qCoSgcC1JpGi_dHzEIk8ptXr38tFUV2GkR2J9AOUb2LZkCbtjdqDGccEn8MKqUmrv2wf5_11c6BfsStkrS8TfVgbuBm8NgcKj6wudcEZOwcMBpFPRiayG95sWU');
 
+// Added by Troy ================================================
+var mqtt = require('mqtt');
+var client = mqtt.createClient(2000, '162.249.6.114', {
+	username : 'user',
+	password : 'advanchip'
+});
+var csg = require('./routes/csg');
+var csgReq = require('./routes/csg_req');
+var csgRes = require('./routes/csg_res');
 
+client.subscribe('server');
+client.on('message', function (topic, message) {
+	csgRes.resHandler(message);
+});
+
+// For Testing... =================================================
+app.get('/logcheck', csg.logcheck);
+app.get('/logdel', csg.logdel);
+app.get('/on/:gate/:swt', function(req,res){
+	csgReq.turnOnOneSwitch(req.params.gate, req.params.swt, client);
+	res.end('DONE');
+});
+app.get('/off/:gate/:swt', function(req,res){
+	csgReq.turnOffOneSwitch(req.params.gate, req.params.swt, client);
+	res.end('DONE');
+});
+app.get('/onall/:gate', function(req,res){
+	csgReq.turnOnAllSwitch(req.params.gate, client);
+	res.end('DONE');
+});
+app.get('/offall/:gate', function(req,res){
+	csgReq.turnOffAllSwitch(req.params.gate, client);
+	res.end('DONE');
+});
+app.get('/status/:gate', function(req,res){
+	csgReq.reqStatus(req.params.gate, client);
+	res.end('DONE');
+});
+
+/* To Spencer 
+	First of all, request 'CloudMQTT Add-on' from Heroku.
+
+	If you want to send a signal to a gateway, use one of these five in 'csg_req.js' in routes.
+		csgReq.turnOnOneSwitch(gateway, switch, client);  // Turn On One Switch
+		csgReq.turnOffOneSwitch(gateway, switch, client);  // Turn Off One Switch
+		csgReq.turnOnAllSwitch(gateway, client);  // Turn On All Switches
+		csgReq.turnOffAllSwitch(gateway, client);  // Turn Off All Switches
+		csgReq.reqStatus(gateway, client);  // Request Status of All Switches
+		
+		P.S. The value client came from this part in 'app.js'
+			var client = mqtt.createClient(2000, '162.249.6.114', {
+				username : 'user',
+				password : 'advanchip'
+			});
+			
+	If you take a look at 'csg_res.js' in routes, there are several responses.
+	Probably you have to update the DB depending on the response.
+	I provided you with APIs so that it makes everything easier for you.
+	
+	If you have questions, let me know.(I usually prefer Gmail, not Facebook)
+*/
 
 
